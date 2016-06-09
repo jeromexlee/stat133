@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Andrew Do" />
+<meta name="author" content="Xinhao Li" />
 
 
 <title>lab3</title>
@@ -116,8 +116,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">lab3</h1>
-<h4 class="author"><em>Andrew Do</em></h4>
-<h4 class="date"><em>June 8, 2016</em></h4>
+<h4 class="author"><em>Xinhao Li</em></h4>
+<h4 class="date"><em>June 9, 2016</em></h4>
 
 </div>
 
@@ -134,24 +134,273 @@ tents &lt;- read_csv(&quot;tents.csv&quot;, col_types = &quot;ccnniccc&quot;)</c
 <p>Answer the following questions programatically. Some questions ask for you to explain what you see—you may answer this as text outside a code block.</p>
 <ol style="list-style-type: decimal">
 <li>Run <code>str()</code> on <code>tents</code>. What information does it tell you? This is a useful function to know.</li>
-<li>What class is <code>tents</code>?</li>
-<li>How many rows are in <code>tents</code>?</li>
-<li>How many columns are in <code>tents</code>?</li>
-<li>What are the names of the columns?</li>
-<li>Display the first 5 rows.</li>
-<li>Display the last 4 rows.</li>
-<li>Find out how to use <code>quantile</code> to find the interquartile range (75th percentile - 50th percentile) of the weights of the tents.</li>
-<li>Find the standard deviation of the heights of the <code>tents</code>. Does <code>R</code> use <code>n</code> or <code>n-1</code> in the denominator when calculating standard deviation?</li>
-<li>The weight is given in grams. Add a new column to the data frame called <code>weight_lbs</code> that contains the weight of the tents in pounds. Remember to overwrite <code>tents</code> with your update.</li>
-<li>The height is given in centimeters. Add a new variable <code>height_in</code> to the data frame that contains the height of the tents in inches. Remember to overwrite <code>tents</code> with your update.</li>
-<li>How many tents cost more than $400?</li>
-<li>Subset the data frame so that it only contains tents that are valued $300 or less. Assign the subsetted data frame the name <code>so_cheap_tents</code>.</li>
-<li>Of the tents that are more than $300, what percent are <code>big-agnes</code> tents?</li>
-<li>Select the <code>bestuse</code> column of <code>tents</code> in four different ways: using <code>$</code>, <code>[[]]</code>, position number and <code>[]</code>, and variable name and <code>[]</code>.</li>
-<li>What is the name of the tend with the best height-to-weight ratio?</li>
-<li>Run <code>table</code> with two arguments, <code>seasons</code> and <code>capacity</code> (this should be one table). What did it do?</li>
-<li>What type of tent (bestuse) is the most common? Your answer should return only the use and not the count.</li>
 </ol>
+<pre class="r"><code>str(tents)</code></pre>
+<pre><code>## Classes 'tbl_df', 'tbl' and 'data.frame':    90 obs. of  8 variables:
+##  $ name    : chr  &quot;fly-creek-ul2&quot; &quot;fly-creek-ul3&quot; &quot;salida-2&quot; &quot;jack-rabbit-sl3&quot; ...
+##  $ brand   : chr  &quot;big-agnes&quot; &quot;big-agnes&quot; &quot;kelty&quot; &quot;big-agnes&quot; ...
+##  $ price   : num  350 450 160 360 149 ...
+##  $ weight  : num  960 1450 1700 2160 2210 1530 2690 1840 3200 850 ...
+##  $ height  : int  96 107 102 107 107 107 117 114 122 97 ...
+##  $ bestuse : chr  &quot;Backpacking&quot; &quot;Backpacking&quot; &quot;Backpacking&quot; &quot;Backpacking&quot; ...
+##  $ seasons : chr  &quot;3-season&quot; &quot;3-season&quot; &quot;3-season&quot; &quot;3-season&quot; ...
+##  $ capacity: chr  &quot;2-person&quot; &quot;3-person&quot; &quot;2-person&quot; &quot;3-person&quot; ...</code></pre>
+<p>This function gives a structure of tents like summary. It shows what the class is and what the type each rows are.<br />
+2. What class is <code>tents</code>?<br />
+The class is ‘tbl_df’, ‘tbl’ and ‘data.frame’<br />
+3. How many rows are in <code>tents</code>?<br />
+There are 90 rows.<br />
+4. How many columns are in <code>tents</code>?<br />
+There are 8 rows.<br />
+5. What are the names of the columns?<br />
+The names of the columns are name, brand, price, weight, height, bestuse, seasons, capacity.<br />
+6. Display the first 5 rows.</p>
+<pre class="r"><code>head(tents,5)</code></pre>
+<pre><code>##              name     brand  price weight height     bestuse  seasons
+## 1   fly-creek-ul2 big-agnes 349.95    960     96 Backpacking 3-season
+## 2   fly-creek-ul3 big-agnes 449.95   1450    107 Backpacking 3-season
+## 3        salida-2     kelty 159.95   1700    102 Backpacking 3-season
+## 4 jack-rabbit-sl3 big-agnes 359.95   2160    107 Backpacking 3-season
+## 5       passage-2       rei 149.00   2210    107 Backpacking 3-season
+##   capacity
+## 1 2-person
+## 2 3-person
+## 3 2-person
+## 4 3-person
+## 5 2-person</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Display the last 4 rows.</li>
+</ol>
+<pre class="r"><code>tail(tents,4)</code></pre>
+<pre><code>##               name      brand  price weight height    bestuse  seasons
+## 87    hula-house-6      kelty 399.95 8306.4    193 Carcamping 3-season
+## 88 docking-station north-face 429.00 6718.8    175 Carcamping 3-season
+## 89     hacienda-6p     marmot 599.00 9553.8    203 Carcamping 3-season
+## 90    hula-house-4      kelty 299.95 5414.8    183 Carcamping 3-season
+##    capacity
+## 87 6-person
+## 88 6-person
+## 89 6-person
+## 90 4-person</code></pre>
+<ol start="8" style="list-style-type: decimal">
+<li>Find out how to use <code>quantile</code> to find the interquartile range (75th percentile - 50th percentile) of the weights of the tents.</li>
+</ol>
+<pre class="r"><code>temp = quantile(tents$weight)
+temp[['75%']] - temp[['25%']]</code></pre>
+<pre><code>## [1] 2900.625</code></pre>
+<p>The the interquartile range (75th percentile - 50th percentile) of the weights of the tents is 2900.625<br />
+9. Find the standard deviation of the heights of the <code>tents</code>. Does <code>R</code> use <code>n</code> or <code>n-1</code> in the denominator when calculating standard deviation?</p>
+<pre class="r"><code>sd(tents$height)</code></pre>
+<pre><code>## [1] 33.05061</code></pre>
+<p>The standard deviation of the heights of the <code>tents</code> is 33.0506081. <code>R</code> use <code>n-1</code> in the denominator when calculating standard deviation.<br />
+10. The weight is given in grams. Add a new column to the data frame called <code>weight_lbs</code> that contains the weight of the tents in pounds. Remember to overwrite <code>tents</code> with your update.</p>
+<pre class="r"><code>tents$weight_lbs = tents$weight/453.59237
+tents$weight_lbs</code></pre>
+<pre><code>##  [1]  2.116438  3.196703  3.747858  4.761985  4.872216  3.373073  5.930435
+##  [8]  4.056506  7.054792  1.873929  5.511557  4.254922  4.938355  5.004493
+## [15]  3.505350  4.629708  4.695846  5.555649  4.188783  5.180863  6.437498
+## [22]  2.821917  3.813997 10.802651  5.820204  2.866009  3.990367  2.380992
+## [29]  8.311427  2.821917  2.998287  5.004493  8.818490  4.629708  5.004493
+## [36]  5.930435  8.509843  5.313141  3.615581  4.321060  2.755778  4.872216
+## [43]  2.689640  3.681720  8.002780  4.497430  3.439211  2.491224  5.996574
+## [50]  4.872216  2.116438  2.866009  6.371359  7.936641  5.886342  6.128851
+## [57]  5.687926  4.872216  5.291094  4.365153  4.938355  4.695846  5.180863
+## [64]  6.746145  2.248715 16.437446 15.062423 17.187458 10.937574 17.187458
+## [71] 15.312427 14.000015 10.812572 18.125084 13.187612 13.500007 13.625009
+## [78]  9.437549 13.562618 18.687484  8.937540 10.499956 13.812402 14.687416
+## [85] 20.687517 10.437565 18.312477 14.812418 21.062524 11.937591</code></pre>
+<ol start="11" style="list-style-type: decimal">
+<li>The height is given in centimeters. Add a new variable <code>height_in</code> to the data frame that contains the height of the tents in inches. Remember to overwrite <code>tents</code> with your update.</li>
+</ol>
+<pre class="r"><code>tents$height_in = tents$height*0.393701
+tents$height_in</code></pre>
+<pre><code>##  [1] 37.79530 42.12601 40.15750 42.12601 42.12601 42.12601 46.06302
+##  [8] 44.88191 48.03152 38.18900 42.12601 40.94490 42.12601 40.15750
+## [15] 37.00789 40.94490 42.91341 50.00003 44.09451 44.09451 44.88191
+## [22] 40.15750 40.15750 39.37010 48.03152 38.18900 40.15750 37.79530
+## [29] 50.00003 37.00789 42.12601 42.12601 44.09451 40.94490 40.15750
+## [36] 44.09451 40.94490 40.15750 38.97640 46.06302 35.82679 37.79530
+## [43] 39.37010 37.00789 44.48821 39.76380 39.76380 42.12601 44.88191
+## [50] 46.06302 37.00789 42.91341 46.06302 70.07878 46.06302 44.88191
+## [57] 42.51971 40.15750 42.12601 40.15750 40.15750 38.18900 46.06302
+## [64] 35.43309 48.03152 72.04728 71.65358 74.01579 59.84255 74.01579
+## [71] 72.04728 66.92917 67.71657 66.14177 59.84255 74.01579 74.80319
+## [78] 61.81106 50.00003 72.04728 55.90554 59.84255 70.86618 74.80319
+## [85] 74.01579 59.05515 75.98429 68.89768 79.92130 72.04728</code></pre>
+<ol start="12" style="list-style-type: decimal">
+<li>How many tents cost more than $400?<br />
+There are 22 tents cost more than $400.<br />
+</li>
+<li>Subset the data frame so that it only contains tents that are valued $300 or less. Assign the subsetted data frame the name <code>so_cheap_tents</code>.</li>
+</ol>
+<pre class="r"><code>so_cheap_tents = subset(tents,price&lt;=300)
+so_cheap_tents</code></pre>
+<pre><code>##                      name          brand  price weight height     bestuse
+## 3                salida-2          kelty 159.95 1700.0    102 Backpacking
+## 5               passage-2            rei 149.00 2210.0    107 Backpacking
+## 7             limelight-3         marmot 249.00 2690.0    117 Backpacking
+## 9             half-dome-4            rei 259.00 3200.0    122 Backpacking
+## 10          fly-creek-ul1      big-agnes 299.95  850.0     97 Backpacking
+## 11       half-dome-2-plus            rei 199.00 2500.0    107 Backpacking
+## 12   quarter-dome-t2-plus            rei 299.00 1930.0    104 Backpacking
+## 13            camp-dome-2            rei  99.50 2240.0    107 Backpacking
+## 14            half-dome-2            rei 179.00 2270.0    102 Backpacking
+## 15            lynx-pass-1      big-agnes 179.95 1590.0     94 Backpacking
+## 16            limelight-2         marmot 199.00 2100.0    104 Backpacking
+## 21          zia-3-package sierra-designs 239.00 2920.0    114 Backpacking
+## 22               hubba-1p            msr 249.95 1280.0    102 Backpacking
+## 23        jack-rabbit-sl2      big-agnes 279.95 1730.0    102 Backpacking
+## 27         hubba-hubba-2p            msr 299.95 1810.0    102 Backpacking
+## 28          seedhouse-sl1      big-agnes 249.95 1080.0     96 Backpacking
+## 29            limelight-4         marmot 299.00 3770.0    127 Backpacking
+## 30        quarter-dome-t1            rei 199.00 1280.0     94 Backpacking
+## 34             tadpole-23     north-face 199.00 2100.0    104 Backpacking
+## 38            arete-asl-2            rei 299.00 2410.0    102 Backpacking
+## 39              phoenix-2     north-face 299.00 1640.0     99 Backpacking
+## 41                 eos-1p         marmot 219.00 1250.0     91 Backpacking
+## 42            lynx-pass-2      big-agnes 199.95 2210.0     96 Backpacking
+## 47               espri-2p           nemo 299.95 1560.0    101 Backpacking
+## 55            gunnison-31          kelty 229.95 2670.0    117 Backpacking
+## 57        big-fat-frog-24     north-face 259.00 2580.0    108 Backpacking
+## 58            gunnison-21          kelty 189.95 2210.0    102 Backpacking
+## 60                aura-2p         marmot 299.00 1980.0    102 Backpacking
+## 62 burn-ridge-outfitter-2      big-agnes 189.95 2130.0     97 Backpacking
+## 65     fast-stash-shelter            msr 299.95 1020.0    122 Backpacking
+## 67              hobitat-4            rei 269.00 6832.2    182  Carcamping
+## 69           limestone-4p         marmot 299.00 4961.2    152  Carcamping
+## 73            big-house-4      big-agnes 299.95 4904.5    172  Carcamping
+## 76            camp-dome-6            rei 259.00 6123.5    188  Carcamping
+## 78            camp-dome-4            rei 199.00 4280.8    157  Carcamping
+## 83          trail-ridge-6          kelty 289.95 6265.2    180  Carcamping
+## 86          trail-ridge-4          kelty 199.95 4734.4    150  Carcamping
+## 90           hula-house-4          kelty 299.95 5414.8    183  Carcamping
+##       seasons capacity weight_lbs height_in
+## 3    3-season 2-person   3.747858  40.15750
+## 5    3-season 2-person   4.872216  42.12601
+## 7    3-season 3-person   5.930435  46.06302
+## 9    3-season 4-person   7.054792  48.03152
+## 10   3-season 1-person   1.873929  38.18900
+## 11   3-season 2-person   5.511557  42.12601
+## 12   3-season 2-person   4.254922  40.94490
+## 13   3-season 2-person   4.938355  42.12601
+## 14   3-season 2-person   5.004493  40.15750
+## 15   3-season 1-person   3.505350  37.00789
+## 16   3-season 2-person   4.629708  40.94490
+## 21   3-season 3-person   6.437498  44.88191
+## 22   3-season 1-person   2.821917  40.15750
+## 23   3-season 2-person   3.813997  40.15750
+## 27   3-season 2-person   3.990367  40.15750
+## 28   3-season 1-person   2.380992  37.79530
+## 29   3-season 4-person   8.311427  50.00003
+## 30   3-season 1-person   2.821917  37.00789
+## 34   3-season 2-person   4.629708  40.94490
+## 38 3-4-season 2-person   5.313141  40.15750
+## 39   3-season 2-person   3.615581  38.97640
+## 41   3-season 1-person   2.755778  35.82679
+## 42   3-season 2-person   4.872216  37.79530
+## 47   3-season 2-person   3.439211  39.76380
+## 55   3-season 3-person   5.886342  46.06302
+## 57   3-season 2-person   5.687926  42.51971
+## 58   3-season 2-person   4.872216  40.15750
+## 60   3-season 2-person   4.365153  40.15750
+## 62   3-season 2-person   4.695846  38.18900
+## 65   3-season 2-person   2.248715  48.03152
+## 67   3-season 4-person  15.062423  71.65358
+## 69   3-season 6-person  10.937574  59.84255
+## 73   3-season 4-person  10.812572  67.71657
+## 76   3-season 6-person  13.500007  74.01579
+## 78   3-season 4-person   9.437549  61.81106
+## 83   3-season 6-person  13.812402  70.86618
+## 86   3-season 4-person  10.437565  59.05515
+## 90   3-season 4-person  11.937591  72.04728</code></pre>
+<ol start="14" style="list-style-type: decimal">
+<li><p>Of the tents that are more than $300, what percent are <code>big-agnes</code> tents?<br />
+The percent are <code>big-agnes</code> tents that are more than $300 is 0.2884615</p></li>
+<li><p>Select the <code>bestuse</code> column of <code>tents</code> in four different ways: using <code>$</code>, <code>[[]]</code>, position number and <code>[]</code>, and variable name and <code>[]</code>.</p></li>
+</ol>
+<pre class="r"><code>tents$bestuse
+tents[[&quot;bestuse&quot;]]
+tents[6]
+tents[&quot;bestuse&quot;]</code></pre>
+<ol start="16" style="list-style-type: decimal">
+<li>What is the name of the tents with the best height-to-weight ratio?</li>
+</ol>
+<pre class="r"><code>tents$height_to_weight = tents$height/tents$weight</code></pre>
+<p>The name of the tents with the best height-to-weight ratio is fast-stash-shelter<br />
+17. Run <code>table</code> with two arguments, <code>seasons</code> and <code>capacity</code> (this should be one table). What did it do?</p>
+<pre class="r"><code>table(tents$seasons,tents$capacity)</code></pre>
+<pre><code>##             
+##              1-person 2-person 3-person 4-person 6-person
+##   3-4-season        0        2        1        0        1
+##   3-season          9       26       15       15       13
+##   4-season          0        5        2        1        0</code></pre>
+<p>This function uses the cross-classifying factors between <code>seasons</code> and <code>capacity</code> to build a contingency table of the counts at each combination of them.<br />
+18. What type of tent (bestuse) is the most common? Your answer should return only the use and not the count.<br />
+The most common type of tent is Backpacking.<br />
+19. Create a data frame called <code>kelty</code> with only data on kelty tents. Do the same for <code>big-agnes</code>. Then, combine the two data frames.</p>
+<pre class="r"><code>kelty = subset(tents,brand =='kelty')
+big_agnes = subset(tents,brand =='big-agnes')
+rbind(kelty,big_agnes)</code></pre>
+<pre><code>##                      name     brand  price weight height     bestuse
+## 3                salida-2     kelty 159.95 1700.0    102 Backpacking
+## 55            gunnison-31     kelty 229.95 2670.0    117 Backpacking
+## 58            gunnison-21     kelty 189.95 2210.0    102 Backpacking
+## 83          trail-ridge-6     kelty 289.95 6265.2    180  Carcamping
+## 86          trail-ridge-4     kelty 199.95 4734.4    150  Carcamping
+## 87           hula-house-6     kelty 399.95 8306.4    193  Carcamping
+## 90           hula-house-4     kelty 299.95 5414.8    183  Carcamping
+## 1           fly-creek-ul2 big-agnes 349.95  960.0     96 Backpacking
+## 2           fly-creek-ul3 big-agnes 449.95 1450.0    107 Backpacking
+## 4         jack-rabbit-sl3 big-agnes 359.95 2160.0    107 Backpacking
+## 6         copper-spur-ul2 big-agnes 399.95 1530.0    107 Backpacking
+## 8           fly-creek-ul4 big-agnes 499.95 1840.0    114 Backpacking
+## 10          fly-creek-ul1 big-agnes 299.95  850.0     97 Backpacking
+## 15            lynx-pass-1 big-agnes 179.95 1590.0     94 Backpacking
+## 18        copper-spur-ul4 big-agnes 599.95 2520.0    127 Backpacking
+## 19        copper-spur-ul3 big-agnes 499.95 1900.0    112 Backpacking
+## 23        jack-rabbit-sl2 big-agnes 279.95 1730.0    102 Backpacking
+## 26          seedhouse-sl2 big-agnes 319.95 1300.0     97 Backpacking
+## 28          seedhouse-sl1 big-agnes 249.95 1080.0     96 Backpacking
+## 32         string-ridge-2 big-agnes 499.95 2270.0    107 Backpacking
+## 42            lynx-pass-2 big-agnes 199.95 2210.0     96 Backpacking
+## 54       soda-mountain-sl big-agnes 599.95 3600.0    178 Backpacking
+## 62 burn-ridge-outfitter-2 big-agnes 189.95 2130.0     97 Backpacking
+## 66           king-creek-6 big-agnes 449.95 7455.9    183  Carcamping
+## 73            big-house-4 big-agnes 299.95 4904.5    172  Carcamping
+## 74       flying-diamond-6 big-agnes 499.95 8221.4    168  Carcamping
+## 77            big-house-6 big-agnes 359.95 6180.2    190  Carcamping
+## 79           king-creek-4 big-agnes 349.95 6151.9    127  Carcamping
+## 81       flying-diamond-4 big-agnes 339.95 4054.0    142  Carcamping
+##       seasons capacity weight_lbs height_in height_to_weight
+## 3    3-season 2-person   3.747858  40.15750       0.06000000
+## 55   3-season 3-person   5.886342  46.06302       0.04382022
+## 58   3-season 2-person   4.872216  40.15750       0.04615385
+## 83   3-season 6-person  13.812402  70.86618       0.02873013
+## 86   3-season 4-person  10.437565  59.05515       0.03168300
+## 87   3-season 6-person  18.312477  75.98429       0.02323510
+## 90   3-season 4-person  11.937591  72.04728       0.03379626
+## 1    3-season 2-person   2.116438  37.79530       0.10000000
+## 2    3-season 3-person   3.196703  42.12601       0.07379310
+## 4    3-season 3-person   4.761985  42.12601       0.04953704
+## 6    3-season 2-person   3.373073  42.12601       0.06993464
+## 8    3-season 4-person   4.056506  44.88191       0.06195652
+## 10   3-season 1-person   1.873929  38.18900       0.11411765
+## 15   3-season 1-person   3.505350  37.00789       0.05911950
+## 18   3-season 4-person   5.555649  50.00003       0.05039683
+## 19   3-season 3-person   4.188783  44.09451       0.05894737
+## 23   3-season 2-person   3.813997  40.15750       0.05895954
+## 26   3-season 2-person   2.866009  38.18900       0.07461538
+## 28   3-season 1-person   2.380992  37.79530       0.08888889
+## 32   4-season 2-person   5.004493  42.12601       0.04713656
+## 42   3-season 2-person   4.872216  37.79530       0.04343891
+## 54   3-season 4-person   7.936641  70.07878       0.04944444
+## 62   3-season 2-person   4.695846  38.18900       0.04553991
+## 66   3-season 6-person  16.437446  72.04728       0.02454432
+## 73   3-season 4-person  10.812572  67.71657       0.03506983
+## 74 3-4-season 6-person  18.125084  66.14177       0.02043448
+## 77   3-season 6-person  13.625009  74.80319       0.03074334
+## 79   3-season 4-person  13.562618  50.00003       0.02064403
+## 81   4-season 4-person   8.937540  55.90554       0.03502713</code></pre>
 </div>
 
 
