@@ -1,5 +1,7 @@
 ---
 title: "homework1"
+author: "Xinhao Li"
+date: "June 9, 2016"
 output: html_document
 ---
 
@@ -12,6 +14,8 @@ Install the `nycflights13` package by typing `install.packages("nycflights13")` 
 ```{r}
 library(nycflights13)
 data(flights)
+attach(flights)
+library(plyr)
 ```
 
 You can find the codebook for this dataset using `help(flights).
@@ -29,14 +33,58 @@ plane_max_ad
 ```
 
 1. How many rows are in this data frame? __num_rows__
+```{r}
+num_rows = nrow(flights)
+```
+The rows are `r num_rows` in this data frame.  
 2. How many variables are in this data frame? __num_vars__
+```{r}
+num_vars = ncol(flights)
+```
+There are `r num_vars` variables in this data frame.  
 3. What was the longest departure delay? __longest_dep_delay__
-4. How long were the top 10 longest flights measured from departure to arrival? __longest_flights__
-5. What is the average departure delay time for United Airlines (carrier UA)? __ua_delay__
-6. Order the months from highest average departure delay time to lowest.  __month_delay__
-7. How many unique planes does American Airlines (AA) have? __num_planes_aa__
-8. How many flights originating from JFK flew more than 1000 miles? __jfk_1000mi__
-9. How many airlines fly from LGA to DFW? __num_lga_dfw__
-10. Which airline had the most flights coming out of JFK? __most_flights_jfk__
+```{r}
+longest_dep_delay = max(dep_delay,na.rm=TRUE) 
+```
+The longest departure delay is `r longest_dep_delay`.  
 
+4. How long were the top 10 longest flights measured from departure to arrival? __longest_flights__
+```{r}
+longest_flights = head(sort(air_time,decreasing = TRUE),n = 10)
+```
+The top 10 longest flights measured from departure to arrival are `r longest_flights`.  
+
+5. What is the average departure delay time for United Airlines (carrier UA)? __ua_delay__
+```{r}
+ua_delay = mean(dep_delay[which(carrier == "UA")], na.rm=TRUE)  
+```
+The average departure delay time for UA is `r ua_delay`.  
+6. Order the months from highest average departure delay time to lowest.  __month_delay__
+```{r}
+month_delay = order(aggregate(dep_delay, by = list(month), mean, na.rm = TRUE)$x,decreasing = T)
+```
+The order of the months is `r month_delay`.  
+7. How many unique planes does American Airlines (AA) have? __num_planes_aa__
+```{r}
+num_planes_aa = length(unique(flights$tailnum[which(carrier == "AA")])) 
+```
+The unique planes AA have is `r num_planes_aa`.  
+8. How many flights originating from JFK flew more than 1000 miles? __jfk_1000mi__
+```{r}
+jfk_1000mi = length(distance[which(origin == "JFK")][distance[which(origin == "JFK")]>1000]) 
+```
+There are `r jfk_1000mi` flights originating from JFK flew more than 1000 miles.  
+9. How many airlines fly from LGA to DFW? __num_lga_dfw__
+```{r}
+temp = subset(flights, origin == "LGA" & dest == "DFW")
+num_lga_dfw = length(unique(temp$carrier)) 
+```
+There are `r num_lga_dfw` airlines fly from LGA to DFW.  
+
+10. Which airline had the most flights coming out of JFK? __most_flights_jfk__
+```{r}
+temp = ddply(subset(flights,origin == "JFK"),c('carrier'), nrow)
+most_flights_jfk = temp$carrier[which.max(temp$V1)]
+```
+The `r most_flights_jfk` had the most flights coming out of JFK.  
 

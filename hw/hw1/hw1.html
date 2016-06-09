@@ -9,6 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="Xinhao Li" />
 
 
 <title>homework1</title>
@@ -115,13 +116,17 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">homework1</h1>
+<h4 class="author"><em>Xinhao Li</em></h4>
+<h4 class="date"><em>June 9, 2016</em></h4>
 
 </div>
 
 
 <p>Install the <code>nycflights13</code> package by typing <code>install.packages(&quot;nycflights13&quot;)</code> into the console (do not leave this in your R Markdown document). Now load the data set using the following commands:</p>
 <pre class="r"><code>library(nycflights13)
-data(flights)</code></pre>
+data(flights)
+attach(flights)
+library(plyr)</code></pre>
 <p>You can find the codebook for this dataset using `help(flights).</p>
 <p>Using base R commands, answer the following questions (4 points each). The bolded word is what you should save your answer under. You should then print the value. You can break the problem into smaller steps if needed. No additional packages should be loaded. An example is given below.</p>
 <div id="example" class="section level4">
@@ -135,16 +140,44 @@ plane_max_ad</code></pre>
 <pre><code>## [1] &quot;N384HA&quot;</code></pre>
 <ol style="list-style-type: decimal">
 <li>How many rows are in this data frame? <strong>num_rows</strong></li>
-<li>How many variables are in this data frame? <strong>num_vars</strong></li>
-<li>What was the longest departure delay? <strong>longest_dep_delay</strong></li>
+</ol>
+<pre class="r"><code>num_rows = nrow(flights)</code></pre>
+<p>The rows are 336776 in this data frame.<br />
+2. How many variables are in this data frame? <strong>num_vars</strong></p>
+<pre class="r"><code>num_vars = ncol(flights)</code></pre>
+<p>There are 19 variables in this data frame.<br />
+3. What was the longest departure delay? <strong>longest_dep_delay</strong></p>
+<pre class="r"><code>longest_dep_delay = max(dep_delay,na.rm=TRUE) </code></pre>
+<p>The longest departure delay is 1301.</p>
+<ol start="4" style="list-style-type: decimal">
 <li>How long were the top 10 longest flights measured from departure to arrival? <strong>longest_flights</strong></li>
+</ol>
+<pre class="r"><code>longest_flights = head(sort(air_time,decreasing = TRUE),n = 10)</code></pre>
+<p>The top 10 longest flights measured from departure to arrival are 695, 691, 686, 686, 683, 679, 676, 676, 675, 671.</p>
+<ol start="5" style="list-style-type: decimal">
 <li>What is the average departure delay time for United Airlines (carrier UA)? <strong>ua_delay</strong></li>
-<li>Order the months from highest average departure delay time to lowest. <strong>month_delay</strong></li>
-<li>How many unique planes does American Airlines (AA) have? <strong>num_planes_aa</strong></li>
-<li>How many flights originating from JFK flew more than 1000 miles? <strong>jfk_1000mi</strong></li>
-<li>How many airlines fly from LGA to DFW? <strong>num_lga_dfw</strong></li>
+</ol>
+<pre class="r"><code>ua_delay = mean(dep_delay[which(carrier == &quot;UA&quot;)], na.rm=TRUE)  </code></pre>
+<p>The average departure delay time for UA is 12.1060729.<br />
+6. Order the months from highest average departure delay time to lowest. <strong>month_delay</strong></p>
+<pre class="r"><code>month_delay = order(aggregate(dep_delay, by = list(month), mean, na.rm = TRUE)$x,decreasing = T)</code></pre>
+<p>The order of the months is 7, 6, 12, 4, 3, 5, 8, 2, 1, 9, 10, 11.<br />
+7. How many unique planes does American Airlines (AA) have? <strong>num_planes_aa</strong></p>
+<pre class="r"><code>num_planes_aa = length(unique(flights$tailnum[which(carrier == &quot;AA&quot;)])) </code></pre>
+<p>The unique planes AA have is 601.<br />
+8. How many flights originating from JFK flew more than 1000 miles? <strong>jfk_1000mi</strong></p>
+<pre class="r"><code>jfk_1000mi = length(distance[which(origin == &quot;JFK&quot;)][distance[which(origin == &quot;JFK&quot;)]&gt;1000]) </code></pre>
+<p>There are 62071 flights originating from JFK flew more than 1000 miles.<br />
+9. How many airlines fly from LGA to DFW? <strong>num_lga_dfw</strong></p>
+<pre class="r"><code>temp = subset(flights, origin == &quot;LGA&quot; &amp; dest == &quot;DFW&quot;)
+num_lga_dfw = length(unique(temp$carrier)) </code></pre>
+<p>There are 3 airlines fly from LGA to DFW.</p>
+<ol start="10" style="list-style-type: decimal">
 <li>Which airline had the most flights coming out of JFK? <strong>most_flights_jfk</strong></li>
 </ol>
+<pre class="r"><code>temp = ddply(subset(flights,origin == &quot;JFK&quot;),c('carrier'), nrow)
+most_flights_jfk = temp$carrier[which.max(temp$V1)]</code></pre>
+<p>The B6 had the most flights coming out of JFK.</p>
 </div>
 
 
