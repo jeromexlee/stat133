@@ -66,7 +66,7 @@ month_delay = order(aggregate(dep_delay, by = list(month), mean, na.rm = TRUE)$x
 The order of the months is `r month_delay`.  
 7. How many unique planes does American Airlines (AA) have? __num_planes_aa__
 ```{r}
-num_planes_aa = length(unique(flights$tailnum[which(carrier == "AA")])) 
+num_planes_aa = nrow(table(subset(flights,carrier=="AA",select=c(tailnum),na.rm=T)))
 ```
 The unique planes AA have is `r num_planes_aa`.  
 8. How many flights originating from JFK flew more than 1000 miles? __jfk_1000mi__
