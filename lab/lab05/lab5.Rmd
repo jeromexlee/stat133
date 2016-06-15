@@ -1,6 +1,6 @@
 ---
 title: "lab4"
-author: "Andrew Do"
+author: "Xinhao Li"
 date: "June 13, 2016"
 output: html_document
 ---
