@@ -184,7 +184,21 @@ CFracToDec(c(2,1,2,1,1,4,1,1,6,1,1,8)) # 2.718282</code></pre>
 <li>sequence - a vector containing the start value, the intermediate values, and end value</li>
 <li>stop_time - an integer denoting how many steps it took for the sequence to terminate</li>
 </ul>
-<pre class="r"><code># your code</code></pre>
+<pre class="r"><code># your code
+Hailstone &lt;-function(n){
+  sequence = c(n)
+  stop_time = 0
+  while(n!=1){
+    if(n%%2 ==0){
+      n = n/2
+    } else {
+      n = n*3+1
+    }
+    sequence = append(sequence,n)
+    stop_time = stop_time+1
+  }
+  return(list(sequence=sequence,stop_time=stop_time))
+}</code></pre>
 <p>Test your function:</p>
 <pre class="r"><code>Hailstone(1) # sequence = 1; stop_time = 0
 Hailstone(5) # sequence = (5, 16, 8, 4, 2, 1); stop_time = 5
