@@ -64,7 +64,7 @@ Do not use any looping constructions (we haven't covered this yet, and they're s
 
 ```{r}
 # Problem 1
-
+files = str_c('plot',str_pad(seq(100),3,pad=0),'.png')
 ```
 
 ### Problem 2 - USA States Names (8 pts)
@@ -77,42 +77,42 @@ states <- rownames(USArrests)
 
 1. How many states contain the letter `i`?
 ```{r}
-
+length(str_subset(states, pattern = '[Ii]'))
 ```
 
 2. How many states do not contain the letter `a`?
 ```{r}
-
+length(states) -length(str_subset(states,pattern = '[Aa]'))
 ```
 
 3. Which states contain the letter `j`?
 ```{r}
-
+str_subset(states,pattern = '[Jj]')
 ```
 
 4. Which states are formed by two words?
 ```{r}
-
+str_subset(states,pattern = '^[A-Za-z]+ [A-Za-z]+$')
 ```
 
 5. Which states start with `W` and end with a consonant (non-vowel)?
 ```{r}
-
+str_subset(states,pattern = '^[W].+[^aeiouAEIOU]$')
 ```
 
 6. Which states contain at least three `i`'s (e.g. Illinois)?
 ```{r}
-
+subset(states,str_count(states,pattern = '[Ii]')>=3)
 ```
 
 7. Which states contain exactly five vowels (e.g. California)?
 ```{r}
-
+subset(states,str_count(states,pattern = '[aeiouAEIOU]')==5)
 ```
 
 8. Which states contain three consecutive vowels (e.g. Hawaii)?
 ```{r}
-
+str_subset(states,pattern = '[aeiouAEIOU]{3}')
 ```
 
 ### Problem 3 Colors in Hexadecimal Notation (4 pts)
@@ -121,10 +121,14 @@ Write a function `is_hex()` that checks whether the input is a valid color in he
 
 ```{r}
 # is_hex()
+is_hex <- function(color){
+  p = '^#([0-9A-Fa-f]{6})$'
+  str_detect(color,p)
+}
 ```
 
 Change `eval` to `TRUE` to test your function.
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 is_hex("#ff0000")  # TRUE
 is_hex("#123456")  # TRUE
 is_hex("#12Fb56")  # TRUE
@@ -140,10 +144,13 @@ Write a function called `reverse_chars` that reverses a string by characters. Yo
 
 ```{r}
 # reverse_chars()
+reverse_chars <-function(str){
+  paste(rev(strsplit(str,"")[[1]]),collapse="") 
+}
 ```
 
 Change `eval` to `TRUE` to test your function.
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 reverse_chars("Rictusempra")
 reverse_chars("Lumox Maxima")
 reverse_chars("Repello Muggletum")
@@ -163,10 +170,14 @@ Your job is to write a function `remove_tag` that takes a vector of text from an
 
 ```{r}
 # Your code
+remove_tag <- function(x){
+  
+  return(str_extract(x,'(?<=>)(.*?)(?=<)'))
+}
 ```
 
 Test your code:
-```{r, eval = F}
+```{r, eval = T}
 phylo <- c("<common>dandelion</common>",
            "<genus>Taraxacum</genus>",
            "<kingdom>Plantae</kingdom>")
@@ -190,10 +201,21 @@ Hints:
 
 ```{r}
 # dna_to_aa()
+table = read_csv("/Users/XINHAO_LI/Dropbox/ucb/stat133-su2016/stat133/hw/hw2/codons")
+amino_acid = table$amino_acid
+names(amino_acid)=table$dna_triplet
+dna_to_aa <- function(x){
+  if (str_detect(x,'[^CGAT]')) {
+    return("Error: Invalid DNA sequence")
+  } else {
+    sub_dna = substring(x,seq(1, nchar(x)-1, 3),seq(3, nchar(x), 3))
+    return(paste(str_replace_all(sub_dna,amino_acid),collapse = ""))
+  }
+}
 ```
 
 Test your function:
-```{r, eval = F}
+```{r, eval = T}
 dna_to_aa("GAGCCATGCATT") # "EPCI"
 dna_to_aa("ATCTAGATAGTAGGC") # "IStopIVG"
 dna_to_aa("UCUGAGAAU") # "Invalid DNA sequence"

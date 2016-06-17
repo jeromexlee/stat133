@@ -28,7 +28,7 @@ Spooky <- function(n){
 }
 ```
 Test your code:
-```{r, eval = F}
+```{r, eval = T}
 Spooky(3)
 ```
 
@@ -68,7 +68,7 @@ CFracToDec <- function(frac){
 }
 ```
 Test your function 
-```{r, eval = F}
+```{r, eval = T}
 CFracToDec(c(3, 4, 12, 4)) # 3.245
 CFracToDec(c(3,7,15,1,292,1,1,1,2,1,3,1)) # 3.141593
 CFracToDec(c(2,1,2,1,1,4,1,1,6,1,1,8)) # 2.718282
@@ -103,7 +103,7 @@ Hailstone <-function(n){
 }
 ```
 Test your function:
-```{r, eval = F}
+```{r, eval = T}
 Hailstone(1) # sequence = 1; stop_time = 0
 Hailstone(5) # sequence = (5, 16, 8, 4, 2, 1); stop_time = 5
 Hailstone(27) # sequence = too long for this comment; stop_time = 111
