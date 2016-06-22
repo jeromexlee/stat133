@@ -206,7 +206,7 @@ amino_acid = table$amino_acid
 names(amino_acid)=table$dna_triplet
 dna_to_aa <- function(x){
   if (str_detect(x,'[^CGAT]')) {
-    return("Error: Invalid DNA sequence")
+    stop("Error: Invalid DNA sequence")
   } else {
     sub_dna = substring(x,seq(1, nchar(x)-1, 3),seq(3, nchar(x), 3))
     return(paste(str_replace_all(sub_dna,amino_acid),collapse = ""))
@@ -215,7 +215,7 @@ dna_to_aa <- function(x){
 ```
 
 Test your function:
-```{r, eval = T}
+```{r, eval = T,error=T}
 dna_to_aa("GAGCCATGCATT") # "EPCI"
 dna_to_aa("ATCTAGATAGTAGGC") # "IStopIVG"
 dna_to_aa("UCUGAGAAU") # "Invalid DNA sequence"
