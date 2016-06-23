@@ -1,0 +1,95 @@
+---
+title: "lab11"
+author: "Andrew Do"
+date: "June 23, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages
+The following packages are allowed for this lab:
+
+* `dplyr`
+* `tidyr`
+* `stringr`
+* `readr`
+* `lubridate`
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(readr)
+library(lubridate)
+```
+
+## Billboards Continued
+
+Load the billboard data.  Perform the following tasks/answer the following questions:
+```{r}
+#Road data
+billboard = read_csv('/Users/XINHAO_LI/Dropbox/ucb/stat133-su2016/stat133/lab/labs3/lab11/billboard.csv')
+```
+
+1.  Gather the week columns
+```{r}
+df = billboard %>% 
+  gather(week,rank,-year,-artist.inverted,-track,-time,-genre,-date.entered,-date.peaked) %>% 
+  mutate(week=str_match(week,'[0-9]+')) %>% 
+  na.omit
+```
+
+2.  Change the week data into integer values (e.g. x1st.week into 1)
+```{r}
+df$week = as.integer(df$week)
+```
+
+3.  Which day of the week are the rankings updated?  Are there any exceptions?
+```{r}
+day_of_week = wday(df$date.entered,label=T)
+day_of_week[day_of_week != 'Sat']
+```
+Saturday is the updating day and there are no exceptions.  
+
+4.  Add the week data of the actual dates depicting the day the song's rank was updated.  For example, Destiny's Child's Independent Women Part I went from rank 78 to 63 in its second week of being on the billboard, so its week data should be `2000-09-23` and `2000-09-30`, respectively. Hint: `mutate` using the day the track hit the billboard and something else.
+```{r}
+df = mutate(df,date.updated = ymd(date.entered) + dweeks(week-1))
+```
+
+
+5.  Use intervals to find how many weeks Destiny's Child's Jumpin' Jumpin' and Independent Woman Part 1 were on the billboard together.
+```{r}
+sub1 =filter(df,artist.inverted == "Destiny's Child",track == 'Independent Women Part I' )
+int1 =  tail(sub1$date.entered,n=1) %--% tail(sub1$date.updated,n=1)
+sub2 =filter(df,artist.inverted == "Destiny's Child",track == "Jumpin' Jumpin'")
+int2 =  tail(sub2$date.entered,n=1) %--% tail(sub2$date.updated,n=1)
+seconds(as.duration(tail(sub1$date.entered,n=1) %--% tail(sub2$date.updated,n=1))) / weeks(1)
+```
+
+6.  Review: Clean the artist column: If the artist's name is written as `last, first`, then change the format to `first last`.
+```{r}
+update_name = mutate(df,artist.inverted = str_replace(df$artist.inverted,'(.*), (.*)','\\2 \\1'))
+```
+
+7.  Perhaps the single data frame model for tidy data creates too many duplicate data cells (for example, the artist data is really redundant!).  Create two data frames.  The first data frame, `songs`, you should have the variables `artist`, `track`, `year`, and `time`.  In addition, you should create a new variable `song_id`, which is unique to each song (you can choose how you want to assign IDs).  In the second data frame, `rankings`, you should have the following variables:
+  * `song_id` - same as in `songs`
+  * `date` - the day the ranking was updated
+  * `week` - the number of weeks the song has been on the billboard by that date
+  * `rank` - the song's rank on that date.
+`song_id` should be the only variable in common between the two tables and should allow you to cross-reference the information.
+
+```{r}
+songs = df %>% 
+  select(artist.inverted,track,year,time) %>% 
+  unique %>%
+  mutate(song_id = row_number())
+rankings = select(df,artist.inverted,track,date.updated,week,rank)
+rankings = full_join(songs,rankings)
+rankings = select(rankings,-artist.inverted,-track,-year,-time)
+names(songs) = c('artist','track', 'year', 'time','song_id')
+names(rankings) = c('song_id','date','week','rank')
+```
+
